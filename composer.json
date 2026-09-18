@@ -1,5 +1,5 @@
 {
-    "name": "nhi/seat-industry-planner",
+    "name": "kayle/seat-industry-planner",
     "description": "SeAT plugin that calculates manufacturable items from synced EVE Online blueprints and assets.",
     "type": "seat-plugin",
     "license": "GPL-2.0-or-later",
