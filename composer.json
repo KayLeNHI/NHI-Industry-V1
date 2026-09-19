@@ -17,13 +17,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Local\\Seat\\IndustryPlanner\\": "src/"
+            "kayle\\Seat\\IndustryPlanner\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Local\\Seat\\IndustryPlanner\\IndustryPlannerServiceProvider"
+                "kayle\\Seat\\IndustryPlanner\\IndustryPlannerServiceProvider"
             ]
         }
     },
