@@ -8,12 +8,14 @@ It does not manage ESI tokens itself. SeAT must already be syncing:
 - Character or corporation blueprints
 - EVE SDE industry tables
 
+The plugin is aligned with SeAT 5, PHP 8.2, Laravel 10, and the current ESI compatibility-date model.
+
 ## Features
 
 - Aggregates available assets by type ID.
 - Reads owned character and corporation blueprints.
 - Uses `industryActivityMaterials` and `industryActivityProducts` for manufacturing.
-- Applies blueprint material efficiency to material requirements.
+- Applies blueprint material efficiency using EVE's total-job material rounding.
 - Limits blueprint copies by remaining runs.
 - Shows manufacturable runs, limiting material, missing materials, and product names.
 
@@ -27,13 +29,13 @@ Example `packages/override.json` entry:
 {
   "autoload": {
     "psr-4": {
-      "Local\\Seat\\IndustryPlanner\\": "local/seat-industry-planner/src/"
+      "Kayle\\Seat\\IndustryPlanner\\": "NHI-Industry-V1/src/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Local\\Seat\\IndustryPlanner\\IndustryPlannerServiceProvider"
+        "Kayle\\Seat\\IndustryPlanner\\IndustryPlannerServiceProvider"
       ]
     }
   }
@@ -43,8 +45,8 @@ Example `packages/override.json` entry:
 For a normal Composer install after publishing this package:
 
 ```bash
-composer require local/seat-industry-planner
-php artisan vendor:publish --provider="Local\\Seat\\IndustryPlanner\\IndustryPlannerServiceProvider"
+composer require kayle/seat-industry-planner
+php artisan vendor:publish --provider="Kayle\\Seat\\IndustryPlanner\\IndustryPlannerServiceProvider"
 php artisan cache:clear
 ```
 
@@ -64,6 +66,24 @@ The plugin defaults to SeAT/EVE SDE table names:
 
 If your SeAT installation uses different table names, publish and edit the config.
 
+## ESI and SeAT sync requirements
+
+This plugin reads SeAT's synced database data. SeAT must have tokens with these ESI scopes:
+
+- Character assets: `esi-assets.read_assets.v1`
+- Corporation assets: `esi-assets.read_corporation_assets.v1`
+- Character blueprints: `esi-characters.read_blueprints.v1`
+- Corporation blueprints: `esi-corporations.read_blueprints.v1`
+
+The matching ESI routes are:
+
+- `/characters/{character_id}/assets/`
+- `/characters/{character_id}/blueprints/`
+- `/corporations/{corporation_id}/assets/`
+- `/corporations/{corporation_id}/blueprints/`
+
+The config stores the ESI base URL as `https://esi.evetech.net`, datasource as `tranquility`, and compatibility date as `2026-09-19`.
+
 ## Notes
 
-The first version applies blueprint ME only. It does not yet apply structure rig bonuses, system cost index, job taxes, facility material modifiers, or reaction formulas.
+This version applies blueprint ME only. It does not yet apply structure rig bonuses, system cost index, job taxes, facility material modifiers, or reaction formulas.

@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "eveseat/eveapi": "^5.0",
         "eveseat/services": "^5.0",
         "eveseat/web": "^5.0",
@@ -17,13 +17,13 @@
     },
     "autoload": {
         "psr-4": {
-            "kayle\\Seat\\IndustryPlanner\\": "src/"
+            "Kayle\\Seat\\IndustryPlanner\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "kayle\\Seat\\IndustryPlanner\\IndustryPlannerServiceProvider"
+                "Kayle\\Seat\\IndustryPlanner\\IndustryPlannerServiceProvider"
             ]
         }
     },

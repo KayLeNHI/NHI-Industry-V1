@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Local\Seat\IndustryPlanner\Http\Controllers;
+namespace Kayle\Seat\IndustryPlanner\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Local\Seat\IndustryPlanner\Services\ManufacturingPlanner;
+use Kayle\Seat\IndustryPlanner\Services\ManufacturingPlanner;
 
 class IndustryPlannerController extends Controller
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Local\Seat\IndustryPlanner;
+namespace Kayle\Seat\IndustryPlanner;
 
 use Seat\Services\AbstractSeatPlugin;
 
@@ -45,16 +45,16 @@ class IndustryPlannerServiceProvider extends AbstractSeatPlugin
 
     public function getPackageRepositoryUrl(): string
     {
-        return 'https://github.com/local/seat-industry-planner';
+        return 'https://github.com/KayLeNHI/NHI-Industry-V1';
     }
 
     public function getPackagistPackageName(): string
     {
-        return 'local/seat-industry-planner';
+        return 'kayle/seat-industry-planner';
     }
 
     public function getPackagistVendorName(): string
     {
-        return 'local';
+        return 'kayle';
     }
 }

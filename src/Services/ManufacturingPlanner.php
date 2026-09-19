@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Local\Seat\IndustryPlanner\Services;
+namespace Kayle\Seat\IndustryPlanner\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -104,15 +104,16 @@ class ManufacturingPlanner
         $requirements = $required->map(function ($row) use ($materials, $me): array {
             $material_type_id = (int) $row->material_type_id;
             $base_quantity = (int) $row->quantity;
-            $required_quantity = $this->materialQuantityAfterMe($base_quantity, $me);
+            $required_quantity = $this->materialQuantityForRuns($base_quantity, $me, 1);
             $available_quantity = (int) ($materials->get($material_type_id, 0));
 
             return [
                 'type_id' => $material_type_id,
                 'name' => $this->typeName($material_type_id),
+                'base_quantity' => $base_quantity,
                 'required_per_run' => $required_quantity,
                 'available' => $available_quantity,
-                'possible_runs' => $required_quantity > 0 ? intdiv($available_quantity, $required_quantity) : 0,
+                'possible_runs' => $this->possibleRunsForMaterial($base_quantity, $me, $available_quantity),
                 'missing_for_one_run' => max(0, $required_quantity - $available_quantity),
             ];
         });
@@ -182,9 +183,41 @@ class ManufacturingPlanner
         return $cache[$type_id];
     }
 
-    private function materialQuantityAfterMe(int $base_quantity, int $material_efficiency): int
+    private function materialQuantityForRuns(int $base_quantity, int $material_efficiency, int $runs): int
     {
-        return max(1, (int) ceil($base_quantity * (1 - ($material_efficiency / 100))));
+        if ($base_quantity <= 0 || $runs <= 0) {
+            return 0;
+        }
+
+        return max($runs, (int) ceil($base_quantity * $runs * (1 - ($material_efficiency / 100))));
+    }
+
+    private function possibleRunsForMaterial(int $base_quantity, int $material_efficiency, int $available_quantity): int
+    {
+        if ($base_quantity <= 0 || $available_quantity <= 0) {
+            return 0;
+        }
+
+        $upper_bound = 1;
+
+        while ($this->materialQuantityForRuns($base_quantity, $material_efficiency, $upper_bound) <= $available_quantity) {
+            $upper_bound *= 2;
+        }
+
+        $low = intdiv($upper_bound, 2);
+        $high = $upper_bound - 1;
+
+        while ($low < $high) {
+            $mid = intdiv($low + $high + 1, 2);
+
+            if ($this->materialQuantityForRuns($base_quantity, $material_efficiency, $mid) <= $available_quantity) {
+                $low = $mid;
+            } else {
+                $high = $mid - 1;
+            }
+        }
+
+        return $low;
     }
 
     private function remainingBlueprintRuns(int $quantity, int $runs): int

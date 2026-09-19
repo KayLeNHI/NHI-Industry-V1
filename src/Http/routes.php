@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 
 Route::group([
-    'namespace' => 'Local\Seat\IndustryPlanner\Http\Controllers',
+    'namespace' => 'Kayle\Seat\IndustryPlanner\Http\Controllers',
     'prefix' => 'industry-planner',
     'middleware' => ['web', 'auth'],
 ], function (): void {
